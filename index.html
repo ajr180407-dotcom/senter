@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senter - AlfiTech Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+
+        :root {
+            --primary: #3b82f6;
+            --bg-dark: #020617;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-dark);
+            color: white;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* Bootloader Animation Styles */
+        #bootloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+
+        .boot-text {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 0.5rem;
+            color: #fff;
+            opacity: 0;
+            transform: scale(0.9);
+            animation: boot-fade 1.5s ease-in-out forwards;
+        }
+
+        .boot-loader-bar {
+            width: 150px;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .boot-loader-progress {
+            position: absolute;
+            width: 0%;
+            height: 100%;
+            background: var(--primary);
+            animation: load-progress 1.8s ease-in-out forwards;
+        }
+
+        @keyframes boot-fade {
+            0% { opacity: 0; transform: scale(0.9); filter: blur(10px); }
+            50% { opacity: 1; transform: scale(1); filter: blur(0px); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes load-progress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* Particle & Main Styles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #020617 100%);
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            filter: blur(2px);
+            animation: move-particle 20s linear infinite;
+        }
+
+        @keyframes move-particle {
+            from { transform: translateY(100vh) scale(1); opacity: 0; }
+            to { transform: translateY(-10vh) scale(1.5); opacity: 0.5; }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+
+        .card-3d {
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            perspective: 1000px;
+        }
+
+        .card-3d:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+        }
+
+        .screenshot-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 20px;
+            padding: 20px 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .screenshot-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .phone-frame {
+            flex: 0 0 auto;
+            width: 260px;
+            height: 520px;
+            scroll-snap-align: center;
+            border: 8px solid #1e293b;
+            border-radius: 36px;
+            background: #000;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 20px rgba(59, 130, 246, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .phone-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .floating-icon {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .btn-neon {
+            background: var(--primary);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            transition: all 0.3s;
+        }
+
+        .btn-neon:hover {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Layar Bootloader -->
+    <div id="bootloader">
+        <div class="boot-text">ALFI</div>
+        <div class="boot-loader-bar">
+            <div class="boot-loader-progress"></div>
+        </div>
+        <div class="mt-4 text-[10px] text-gray-500 tracking-[0.3em] uppercase">Powered by AlfiTech</div>
+    </div>
+
+    <div class="bg-particles" id="particles"></div>
+
+    <nav class="fixed top-0 w-full z-50 p-6 backdrop-blur-md border-b border-white/5">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-tighter glow-text uppercase">AlfiTech Studio</h1>
+            <a href="privacy.html" class="text-xs uppercase tracking-widest text-white/60 hover:text-blue-400 transition">Kebijakan Privasi</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-6 pt-32 pb-20 flex flex-col items-center">
+        
+        <!-- Ikon Aplikasi -->
+        <div class="relative mb-12">
+            <div class="absolute inset-0 bg-blue-600 blur-[60px] opacity-30 animate-pulse"></div>
+            <div class="floating-icon w-32 h-32 glass p-1 relative z-10">
+                <img src="assets/icon.png" alt="Senter Icon" class="w-full h-full object-cover rounded-[22px]">
+            </div>
+        </div>
+
+        <h2 class="text-5xl md:text-7xl font-bold text-center mb-4 leading-none tracking-tight uppercase">
+            Senter <span class="text-blue-500">Pro</span>
+        </h2>
+        <p class="text-slate-400 text-center max-w-xl text-lg mb-10 font-light leading-relaxed">
+            Solusi cahaya instan dengan <span class="text-white font-medium">10 mode kedip</span>, dukungan tema gelap & terang, serta fitur offline tanpa iklan.
+        </p>
+
+        <!-- Tombol Download Langsung -->
+        <div class="flex flex-col items-center space-y-4 mb-24">
+            <a href="apk/senter.apk" download="senter.apk" class="btn-neon px-12 py-5 rounded-full font-bold text-xl flex items-center space-x-3">
+                <i class="fab fa-android text-2xl"></i>
+                <span>UNDUH APK v1.0.0</span>
+            </a>
+            <span class="text-[10px] text-blue-400 uppercase tracking-[0.3em] font-bold">Ringan • Hemat Daya • Aman</span>
+        </div>
+
+        <!-- Bagian Screenshot (3 Gambar) -->
+        <div class="w-full max-w-6xl mb-32">
+            <div class="flex items-center justify-between mb-8 px-2">
+                <h3 class="text-2xl font-bold">Preview Aplikasi</h3>
+                <div class="flex space-x-2 text-slate-500 text-xs uppercase tracking-widest">
+                    <i class="fas fa-hand-pointer mr-2 animate-bounce"></i> Geser
+                </div>
+            </div>
+
+            <div class="screenshot-scroll">
+                <div class="phone-frame card-3d">
+                    <img src="assets/screenshot1.png" alt="Tampilan Utama">
+                </div>
+                <div class="phone-frame card-3d">
+                    <img src="assets/screenshot2.png" alt="Pilihan Mode">
+                </div>
+                <div class="phone-frame card-3d">
+                    <img src="assets/screenshot3.png" alt="Pengaturan">
+                </div>
+            </div>
+        </div>
+
+        <!-- Fitur Grid -->
+        <div class="grid md:grid-cols-3 gap-6 w-full max-w-6xl mb-32">
+            <div class="glass p-8 card-3d border-white/5">
+                <i class="fas fa-bolt text-blue-500 text-3xl mb-6"></i>
+                <h4 class="text-xl font-bold mb-3">10 Mode Kedip</h4>
+                <p class="text-slate-400 text-sm leading-relaxed">Dari sinyal SOS hingga strobo cepat untuk berbagai kebutuhan mendesak Anda.</p>
+            </div>
+            <div class="glass p-8 card-3d border-white/5">
+                <i class="fas fa-adjust text-blue-500 text-3xl mb-6"></i>
+                <h4 class="text-xl font-bold mb-3">UI Modern</h4>
+                <p class="text-slate-400 text-sm leading-relaxed">Mendukung Dark & Light mode yang menyesuaikan dengan kenyamanan visual mata Anda.</p>
+            </div>
+            <div class="glass p-8 card-3d border-white/5">
+                <i class="fas fa-shield-alt text-blue-500 text-3xl mb-6"></i>
+                <h4 class="text-xl font-bold mb-3">Privasi Terjamin</h4>
+                <p class="text-slate-400 text-sm leading-relaxed">Berjalan offline sepenuhnya. Tidak mengumpulkan data apa pun dari perangkat Anda.</p>
+            </div>
+        </div>
+
+        <!-- Bagian Donasi -->
+        <div class="w-full max-w-4xl glass p-10 text-center border-blue-500/20" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);">
+            <i class="fas fa-heart text-red-500 text-4xl mb-6 animate-pulse"></i>
+            <h3 class="text-3xl font-bold mb-4">Dukung Semangat Kami</h3>
+            <p class="text-slate-400 max-w-2xl mx-auto mb-8 leading-relaxed">
+                Setiap baris kode dalam aplikasi ini dibuat dengan dedikasi untuk memberikan manfaat bagi banyak orang. Dukungan kecil darimu bagaikan secercah cahaya yang membakar semangat kami untuk terus berkarya dan menghadirkan inovasi baru yang lebih baik. Terima kasih telah menjadi bagian dari perjalanan kami.
+            </p>
+            <a href="https://trakteer.id/Alfitech_app" target="_blank" class="inline-flex items-center space-x-3 bg-red-600 hover:bg-red-700 text-white px-10 py-4 rounded-2xl font-bold transition transform hover:scale-105 shadow-xl shadow-red-900/20">
+                <i class="fas fa-mug-hot"></i>
+                <span>Traktir Kopi di Trakteer</span>
+            </a>
+        </div>
+    </main>
+
+    <footer class="mt-20 border-t border-white/5 py-12 text-center">
+        <p class="text-slate-500 text-xs tracking-widest uppercase mb-4">Dikembangkan Oleh</p>
+        <p class="text-white font-bold text-lg mb-8 uppercase tracking-widest">AlfiTech Studio</p>
+        <div class="flex justify-center space-x-8 text-slate-400 text-xs uppercase tracking-widest">
+            <a href="privacy.html" class="hover:text-white transition">Kebijakan Privasi</a>
+        </div>
+        <div class="mt-12 text-slate-600 text-[10px] tracking-[0.3em]">
+            &copy; 2026 AlfiTech Studio. Seluruh Hak Cipta Dilindungi.
+        </div>
+    </footer>
+
+    <script>
+        // Bootloader logic
+        window.addEventListener('load', () => {
+            const bootloader = document.getElementById('bootloader');
+            setTimeout(() => {
+                bootloader.style.opacity = '0';
+                bootloader.style.visibility = 'hidden';
+            }, 2000); // 2 Detik
+        });
+
+        // Particles generation
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const size = Math.random() * 4 + 2 + 'px';
+            particle.style.width = size;
+            particle.style.height = size;
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.top = Math.random() * 100 + 'vh';
+            particle.style.animationDuration = Math.random() * 10 + 10 + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+</body>
+</html>
+
